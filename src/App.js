@@ -1,23 +1,18 @@
 import logo from './logo.svg';
 import './App.css';
-
+import { Box, Container, Typography } from '@mui/material';
+import MainCompo from './components/mainCompo';
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div>
+      <header>
+        <Box sx={{minHeight : '3.5em', backgroundColor : 'black', display:'flex', justifyContent :'center', alignItems : 'center'}}>
+          <Typography letterSpacing={'2px'} fontFamily={'cursive'} fontSize={'24px'} fontWeight={700} color={'salmon'}>Fatflixxx</Typography>
+        </Box>
       </header>
+      <main>
+        <MainCompo />
+      </main>
     </div>
   );
 }
