@@ -1,15 +1,13 @@
-Overview of the app : This web -app is based on browsing movies and filtering it on the basis of genre, rating etc. The app is fully responsive so user can use it on any screen.
+Overview of the app : This web -app is based on browsing Yoga session and filtering it on the basis of type, location etc. The app is fully responsive so user can use it on any screen.
+
+UI: For robust UI, Material UI is used.
 
 Installation instructions : First run - "npm install" to install node modules and then Run "npm start" to start the dev server.
 
-Usage : Use the search bar to search for movies by title.
-        Browse popular movies displayed on the home page.
-        Filter movies by genre, year, and rating using the filters provided.
+Usage : Use the search bar to search for data by title.
+        Filter data by Type and Location.
 
-API Reference : This app is using TMBD APIs for getting movies list.
-The Movie Browser Web App uses the TMDB API for fetching movie data. Here are some endpoints used:
-
-/movie/popular: Fetches popular movies.
+API Reference : As per Document.
 
 # Getting Started with Create React App
 

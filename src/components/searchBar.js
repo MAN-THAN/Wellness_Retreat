@@ -1,86 +1,153 @@
 import React from "react";
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import { useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
-const SearchBar = ({ search, setSearch, genre, setGenre, year, setYear, rating, setRating }) => {
-  const navigate = useNavigate();
+const SearchBar = ({
+  search,
+  setSearch,
+  location,
+  setLocation,
+  type,
+  setType,
+  setList,
+  list
+}) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const filteredItem = (e) => {
+    e.preventDefault();
+    setLocation(e.target.value);
+    const newArr = list.filter((obj, ind) => obj.location === e.target.value);
+    setList(newArr);
+  }
 
-  const handleGenreChange = (event) => {
-    setGenre(event.target.value);
+
+  const fetchDataBasisOnType = async () => {
+    try {
+      const response = await fetch(
+        `https://669f704cb132e2c136fdd9a0.mockapi.io/api/v1/retreats?type=${type}`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      setList(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleYearChange = (event) => {
-    setYear(event.target.value);
-  };
-
-  const handleRatingChange = (event) => {
-    setRating(event.target.value);
+  const fetchDataBasisOnSearch = async (search) => {
+    try {
+      const response = await fetch(
+        `https://669f704cb132e2c136fdd9a0.mockapi.io/api/v1/retreats?search=${search}`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      setList(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", p: 2 }}>
-      <TextField
-        id="outlined-basic"
-        label=""
-        variant="outlined"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search"
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        p: 2,
+      }}
+    >
+      <Box
         sx={{
-          width: "100%", 
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          justifyContent: "space-around",
+          width: "100%",
+          gap: "1em",
+          alignItems: "center",
           mb: 2,
         }}
-      />
-      <Box sx={{ display: "flex", justifyContent: "space-around", width: "100%", flexWrap: "wrap", gap: "1em" }}>
-        <FormControl sx={{ minWidth: "45%", flexBasis: "auto" }}>
-          <InputLabel id="genre-label">Genre</InputLabel>
+      >
+        <FormControl
+          sx={{
+            flex: isMobile ? "none" : "1",
+            width: isMobile ? "100%" : "auto",
+            minWidth: "200px",
+          }}
+        >
+          <InputLabel id="type-label">Type</InputLabel>
           <Select
-            labelId="genre-label"
-            id="genre-select"
-            value={genre}
-            onChange={handleGenreChange}
+            labelId="type-label"
+            id="type-select"
+            value={type}
+            onChange={(e) => {
+              setType(e.target.value);
+              fetchDataBasisOnType(e.target.value)
+            }}
             sx={{ width: "100%" }}
           >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value={28}>Action</MenuItem>
-            <MenuItem value={12}>Adventure</MenuItem>
-            {/* Add more genres as needed */}
+            <MenuItem value="Signature">Signature</MenuItem>
+            <MenuItem value="Standalone">Standalone</MenuItem>
           </Select>
         </FormControl>
-        <FormControl sx={{ minWidth: "45%", flexBasis: "auto" }}>
-          <InputLabel id="year-label">Year</InputLabel>
+        <FormControl
+          sx={{
+            flex: isMobile ? "none" : "1",
+            width: isMobile ? "100%" : "auto",
+            minWidth: "200px",
+          }}
+        >
+          <InputLabel id="location-label">Location</InputLabel>
           <Select
-            labelId="year-label"
-            id="year-select"
-            value={year}
-            onChange={handleYearChange}
+            labelId="location-label"
+            id="location-select"
+            value={location}
+            onChange={(e) => filteredItem(e)}
             sx={{ width: "100%" }}
           >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value={2024}>2024</MenuItem>
-            <MenuItem value={2023}>2023</MenuItem>
-            {/* Add more years as needed */}
+            <MenuItem value="Goa">Goa</MenuItem>
+            <MenuItem value="Rishikesh">Rishikesh</MenuItem>
+            <MenuItem value="Pune">Pune</MenuItem>
           </Select>
         </FormControl>
-        <FormControl sx={{ minWidth: "45%", flexBasis: "auto" }}>
-          <InputLabel id="rating-label">Rating</InputLabel>
-          <Select
-            labelId="rating-label"
-            id="rating-select"
-            value={rating}
-            onChange={handleRatingChange}
-            sx={{ width: "100%" }}
-          >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value={9}>9+</MenuItem>
-            <MenuItem value={8}>8+</MenuItem>
-            {/* Add more rating options as needed */}
-          </Select>
-        </FormControl>
+        <TextField
+          id="outlined-basic"
+          label=""
+          variant="outlined"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            fetchDataBasisOnSearch(e.target.value)
+            ;}}
+          placeholder="Please Search"
+          sx={{
+            flex: isMobile ? "none" : "1",
+            width: isMobile ? "100%" : "auto",
+            minWidth: "200px",
+          }}
+        />
       </Box>
-      <Button onClick={() => navigate("/favMovies")} sx={{ mt: 2, width: "100%", maxWidth: "15em" }} variant="contained">
-        Go to My Fav Movies
-      </Button>
     </Box>
   );
 };

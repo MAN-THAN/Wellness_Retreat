@@ -1,22 +1,26 @@
-import * as React from 'react';
-import { forwardRef } from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import * as React from "react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import { Button, CardActionArea, CardActions } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  width: '100%',
+  width: "100%",
   maxWidth: 345,
-  margin: 'auto',
-  height: '100%', 
-  display: 'flex',
-  flexDirection: 'column',
-  transition: 'transform 0.2s', 
-  '&:hover': {
-    transform: 'scale(1.05)', 
+  margin: "auto",
+  height: "100%",
+  display: "flex",
+  padding: "10px",
+  boxSizing: "border-box",
+  borderRadius: "10px",
+  backgroundColor : 'lightskyblue',
+  flexDirection: "column",
+  cursor: "pointer",
+  transition: "transform 0.2s",
+  "&:hover": {
+    transform: "scale(1.05)",
   },
 }));
 
@@ -24,44 +28,47 @@ const StyledCardMedia = styled(CardMedia)({
   height: 140,
 });
 
-const CardCompo = forwardRef(({ data }, ref) => {
-  // Construct the full URL for the poster image
-  const baseImageUrl = 'https://image.tmdb.org/t/p/w500';
-  const posterUrl = `${baseImageUrl}${data.poster_path}`;
+const convertDate = (time) => {
+  const date = new Date(time * 1000);
+  return date.toDateString();
+};
 
-  const handleAddToFav = () => {
-    const favMovies = JSON.parse(localStorage.getItem('favMovies')) || [];
-    const isAlreadyFav = favMovies.find(movie => movie.id === data.id);
-    if (!isAlreadyFav) {
-      favMovies.push(data);
-      localStorage.setItem('favMovies', JSON.stringify(favMovies));
-    }
-  };
-
+const CardCompo = ({ data }) => {
   return (
-    <StyledCard ref={ref}>
+    <StyledCard>
       <CardActionArea>
         <StyledCardMedia
           component="img"
-          image={posterUrl}
+          image={data.image}
           alt={data.title}
+          sx={{ borderRadius: "10px" }}
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div" sx={{ minHeight: '3.6rem' }}>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            sx={{ minHeight: "3.6rem" }}
+          >
             {data.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Release Date : {data.release_date}
+            {data.description}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Date : {convertDate(data.date)}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Location : {data.location}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Price : ${data.price}
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary" onClick={handleAddToFav}>
-          Add to Fav
-        </Button>
-      </CardActions>
+      <CardActions></CardActions>
     </StyledCard>
   );
-});
+};
 
 export default CardCompo;
